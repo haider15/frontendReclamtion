@@ -5,7 +5,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 const ClientTable = () => {
   const [clients, setClients] = useState([]);
-  const [formData, setFormData] = useState({ nom: '', email: '', telephone: '' });
+  const [formData, setFormData] = useState({ nom: '', email: '', telephone: '', motDePasse: '' });
   const [editingId, setEditingId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -25,7 +25,7 @@ const ClientTable = () => {
   }, []);
 
   const openModalToAdd = () => {
-    setFormData({ nom: '', email: '', telephone: '' });
+    setFormData({ nom: '', email: '', telephone: '', motDePasse: '' });
     setEditingId(null);
     setShowModal(true);
   };
@@ -149,7 +149,8 @@ const ClientTable = () => {
           <tr>
             <th style={styles.th}>Nom</th>
             <th style={styles.th}>Email</th>
-            <th style={styles.th}>telephone</th>
+            <th style={styles.th}>Téléphone</th>
+            <th style={styles.th}>Mot de passe</th>
             <th style={styles.th}>Actions</th>
           </tr>
         </thead>
@@ -159,6 +160,7 @@ const ClientTable = () => {
               <td style={styles.td}>{client.nom}</td>
               <td style={styles.td}>{client.email}</td>
               <td style={styles.td}>{client.telephone}</td>
+              <td style={styles.td}>{client.motDePasse}</td>
               <td style={styles.td}>
                 <button style={styles.iconBtn} onClick={() => openModalToEdit(client)}>✏️</button>
                 <button style={{ ...styles.iconBtn, color: 'red' }} onClick={() => handleDelete(client)}>🗑️</button>
@@ -168,7 +170,6 @@ const ClientTable = () => {
         </tbody>
       </table>
 
-      {/* Modal de confirmation de suppression */}
       {showDeleteModal && (
         <div style={styles.modalOverlay}>
           <div style={styles.modalContent}>
@@ -181,7 +182,6 @@ const ClientTable = () => {
         </div>
       )}
 
-      {/* Modal de gestion des clients (ajout/modification) */}
       {showModal && (
         <div style={styles.modalOverlay}>
           <div style={styles.modalContent}>
@@ -200,7 +200,7 @@ const ClientTable = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="email"
+                placeholder="Email"
                 required
               />
               <input
@@ -208,7 +208,16 @@ const ClientTable = () => {
                 name="telephone"
                 value={formData.telephone}
                 onChange={handleChange}
-                placeholder="telephone"
+                placeholder="Téléphone"
+                required
+              />
+              <input
+                type="password"
+                style={styles.modalInput}
+                name="motDePasse"
+                value={formData.motDePasse}
+                onChange={handleChange}
+                placeholder="Mot de passe"
                 required
               />
               <div style={styles.modalActions}>

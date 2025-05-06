@@ -10,6 +10,7 @@ const Sidebar = () => {
         <li><a href="/reclamations">Réclamations</a></li>
         <li><a href="/affectation">Affectation</a></li>
         <li><a href="/agents">Agents</a></li>
+        <li><a href="/clients">client</a></li>
         {/* Ajoutez d'autres liens ici si nécessaire */}
       </ul>
     </div>

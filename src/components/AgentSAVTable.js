@@ -5,7 +5,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 const AgentSAVTable = () => {
   const [agents, setAgents] = useState([]);
-  const [formData, setFormData] = useState({ nom: '', prenom: '', email: '' });
+  const [formData, setFormData] = useState({ nom: '', competence: '' , motDePasse: ''});
   const [editingId, setEditingId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -25,7 +25,7 @@ const AgentSAVTable = () => {
   }, []);
 
   const openModalToAdd = () => {
-    setFormData({ nom: '', prenom: '', email: '' });
+    setFormData({ nom: '',  competence: '', motDePasse: '' });
     setEditingId(null);
     setShowModal(true);
   };
@@ -144,6 +144,7 @@ const AgentSAVTable = () => {
           <tr>
             <th style={styles.th}>Nom</th>
             <th style={styles.th}>Compétence</th>
+            <th style={styles.th}>mot de passe</th>
             <th style={styles.th}>Actions</th>
           </tr>
         </thead>
@@ -152,6 +153,7 @@ const AgentSAVTable = () => {
             <tr key={agent.id}>
               <td style={styles.td}>{agent.nom}</td>
               <td style={styles.td}>{agent.competence}</td>
+              <td style={styles.td}>{agent.motDePasse}</td>
               <td style={styles.td}>
                 <button style={styles.iconBtn} onClick={() => openModalToEdit(agent)}>✏️</button>
                 <button
@@ -179,20 +181,22 @@ const AgentSAVTable = () => {
                 placeholder="Nom"
                 required
               />
+              
               <input
                 style={styles.modalInput}
-                name="prenom"
-                value={formData.prenom}
+                name="competence"
+                value={formData.competence}
                 onChange={handleChange}
-                placeholder="Prénom"
+                placeholder="competence"
                 required
               />
+
               <input
                 style={styles.modalInput}
-                name="email"
-                value={formData.email}
+                name="motDePasse"
+                value={formData. motDePasse}
                 onChange={handleChange}
-                placeholder="Email"
+                placeholder=" motDePasse"
                 required
               />
               <div style={styles.modalActions}>

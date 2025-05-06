@@ -1,0 +1,25 @@
+.client-interface {
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+  }
+  
+  textarea {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+  
+  button {
+    padding: 8px 16px;
+    margin-top: 10px;
+    cursor: pointer;
+  }
+  
+  .historique {
+    margin-top: 20px;
+    background: #f4f4f4;
+    padding: 15px;
+    border-radius: 8px;
+  }
+  
