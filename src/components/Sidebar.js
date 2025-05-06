@@ -6,7 +6,7 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <ul>
-        <li><a href="/">Accueil</a></li>
+     
         <li><a href="/reclamations">Réclamations</a></li>
         <li><a href="/affectation">Affectation</a></li>
         <li><a href="/agents">Agents</a></li>
