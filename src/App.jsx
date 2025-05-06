@@ -1,21 +1,28 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Sidebar from './components/Sidebar'; // Assurez-vous que Sidebar est bien importé
 import AgentSAVTable from './components/AgentSAVTable';
 import ClientTable from './components/ClientTable';
 import ReclamationTable from './components/ReclamationTable';
 import SuiviReclamationTable from './components/SuiviReclamation';
+import Affectation from './components/Affectation';
+import './App.css'; // Importer votre CSS si nécessaire
 
 const App = () => {
   return (
     <Router>
-      <div className="container">
-        <Routes>
-          <Route path="/agent" element={<AgentSAVTable />} />
-          <Route path="/client" element={<ClientTable />} />
-          <Route path="/reclmation" element={<ReclamationTable />} />
-          <Route path="/suivi" element={<SuiviReclamationTable />} />
-          <Route path="*" element={<Navigate to="/agent" />} />
-        </Routes>
+      <div className="app">
+        <Sidebar />
+        <div className="main-content">
+          <Routes>
+            <Route path="/" element={<Navigate to="/agents" />} />
+            <Route path="/agents" element={<AgentSAVTable />} />
+            <Route path="/clients" element={<ClientTable />} />
+            <Route path="/reclamations" element={<ReclamationTable />} />
+            <Route path="/suivi-reclamations" element={<SuiviReclamationTable />} />
+            <Route path="/affectation" element={<Affectation />} />
+          </Routes>
+        </div>
       </div>
     </Router>
   );
