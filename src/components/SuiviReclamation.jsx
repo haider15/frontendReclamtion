@@ -1,37 +1,127 @@
 import React from 'react';
 import axios from 'axios';
-import jsPDF from 'jspdf'; // Importer la bibliothèque jsPDF
+import jsPDF from 'jspdf';
 
 const API_URL = process.env.REACT_APP_API_URL;
+
+const styles = {
+  container: {
+    padding: '2rem',
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+    maxWidth: 1000,
+    margin: 'auto',
+  },
+  header: {
+    marginBottom: '1rem',
+    color: '#333',
+  },
+  button: {
+    marginRight: '1rem',
+    padding: '0.5rem 1rem',
+    fontSize: '1rem',
+    cursor: 'pointer',
+    borderRadius: 4,
+    border: 'none',
+    backgroundColor: '#4CAF50',
+    color: 'white',
+    transition: 'background-color 0.3s',
+  },
+  buttonDanger: {
+    backgroundColor: '#f44336',
+  },
+  buttonSecondary: {
+    backgroundColor: '#2196F3',
+  },
+  table: {
+    width: '100%',
+    borderCollapse: 'collapse',
+    marginTop: '1rem',
+  },
+  th: {
+    backgroundColor: '#f2f2f2',
+    padding: '12px',
+    borderBottom: '1px solid #ddd',
+    textAlign: 'left',
+  },
+  td: {
+    padding: '10px',
+    borderBottom: '1px solid #ddd',
+  },
+  trHover: {
+    backgroundColor: '#f9f9f9',
+  },
+  modalOverlay: {
+    position: 'fixed',
+    top: 0, left: 0, right: 0, bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: '2rem',
+    borderRadius: 8,
+    width: '400px',
+    maxHeight: '80vh',
+    overflowY: 'auto',
+    boxShadow: '0 5px 15px rgba(0,0,0,0.3)',
+  },
+  formGroup: {
+    marginBottom: '1rem',
+  },
+  label: {
+    display: 'block',
+    marginBottom: '0.5rem',
+    fontWeight: '600',
+  },
+  input: {
+    width: '100%',
+    padding: '0.5rem',
+    borderRadius: 4,
+    border: '1px solid #ccc',
+    fontSize: '1rem',
+  },
+  select: {
+    width: '100%',
+    padding: '0.5rem',
+    borderRadius: 4,
+    border: '1px solid #ccc',
+    fontSize: '1rem',
+  },
+  modalButtons: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    gap: '1rem',
+  },
+};
 
 class SuiviReclamationTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       suivis: [],
-      clients: [],
       employes: [],
+      reclamations: [],
       formData: {
         message: '',
         action: '',
-        note: '',
-        description: '',
-        produit: '',
-        clientId: '',
         employeId: '',
+        reclamationId: '',
+        date: '',
       },
       editingId: null,
       showModal: false,
       showDeleteModal: false,
       deletingId: null,
-      reclamationId: ''
     };
   }
 
   componentDidMount() {
     this.fetchSuivis();
-    this.fetchClients();
     this.fetchEmployes();
+    this.fetchReclamations();
   }
 
   fetchSuivis = async () => {
@@ -40,15 +130,6 @@ class SuiviReclamationTable extends React.Component {
       this.setState({ suivis: response.data });
     } catch (err) {
       console.error('Erreur de chargement des suivis :', err);
-    }
-  };
-
-  fetchClients = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/api/clients`);
-      this.setState({ clients: response.data });
-    } catch (err) {
-      console.error('Erreur chargement clients :', err);
     }
   };
 
@@ -61,35 +142,40 @@ class SuiviReclamationTable extends React.Component {
     }
   };
 
+  fetchReclamations = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/reclamations`);
+      this.setState({ reclamations: response.data });
+    } catch (err) {
+      console.error('Erreur chargement réclamations :', err);
+    }
+  };
+
   openModalToAdd = () => {
     this.setState({
       formData: {
         message: '',
         action: '',
-        note: '',
-        description: '',
-        produit: '',
-        clientId: '',
         employeId: '',
+        reclamationId: '',
+        date: '',
       },
       editingId: null,
-      showModal: true
+      showModal: true,
     });
   };
 
   openModalToEdit = (suivi) => {
     this.setState({
       formData: {
-        message: suivi.message,
-        action: suivi.action,
-        note: suivi.reclamation.note,
-        description: suivi.reclamation.description,
-        produit: suivi.reclamation.produit,
-        clientId: suivi.reclamation.client.id,
-        employeId: suivi.employe.id,
+        message: suivi.message || '',
+        action: suivi.action || '',
+        employeId: suivi.employe?.id || '',
+        reclamationId: suivi.reclamation?.id || '',
+        date: suivi.date ? suivi.date.substring(0, 10) : '',
       },
       editingId: suivi.id,
-      showModal: true
+      showModal: true,
     });
   };
 
@@ -98,24 +184,39 @@ class SuiviReclamationTable extends React.Component {
     this.setState((prevState) => ({
       formData: {
         ...prevState.formData,
-        [name]: value
-      }
+        [name]: value,
+      },
     }));
   };
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    const { editingId, formData, reclamationId } = this.state;
+    const { editingId, formData } = this.state;
+
+    if (!formData.message || !formData.action || !formData.employeId || !formData.reclamationId || !formData.date) {
+      alert('Veuillez remplir tous les champs.');
+      return;
+    }
+
+    const payload = {
+      message: formData.message,
+      action: formData.action,
+      date: formData.date,
+      employe: { id: formData.employeId },
+      reclamation: { id: formData.reclamationId },
+    };
+
     try {
       if (editingId) {
-        await axios.put(`${API_URL}/api/suivis/${editingId}`, formData);
+        await axios.put(`${API_URL}/api/suivis/${editingId}`, payload);
       } else {
-        await axios.post(`${API_URL}/api/suivis/${reclamationId}/suivi`, formData);
+        await axios.post(`${API_URL}/api/suivis`, payload);
       }
-      this.setState({ showModal: false });
+      this.setState({ showModal: false, editingId: null });
       this.fetchSuivis();
     } catch (err) {
       console.error('Erreur lors de la sauvegarde du suivi :', err);
+      alert('Erreur lors de la sauvegarde. Veuillez réessayer.');
     }
   };
 
@@ -127,10 +228,11 @@ class SuiviReclamationTable extends React.Component {
     const { deletingId } = this.state;
     try {
       await axios.delete(`${API_URL}/api/suivis/${deletingId}`);
-      this.setState({ showDeleteModal: false });
+      this.setState({ showDeleteModal: false, deletingId: null });
       this.fetchSuivis();
     } catch (err) {
       console.error('Erreur suppression :', err);
+      alert('Erreur lors de la suppression.');
     }
   };
 
@@ -138,137 +240,73 @@ class SuiviReclamationTable extends React.Component {
     this.setState({ showDeleteModal: false, deletingId: null });
   };
 
-  // Méthode pour générer un PDF
   generatePDF = () => {
     const { suivis } = this.state;
+    if (suivis.length === 0) {
+      alert('Aucun suivi disponible pour générer un PDF.');
+      return;
+    }
+
     const doc = new jsPDF();
-  
-    // Calcul de la moyenne des notes
-    const totalNotes = suivis.reduce((sum, suivi) => sum + suivi.reclamation.note, 0);
+    const totalNotes = suivis.reduce((sum, s) => sum + (s.reclamation?.note || 0), 0);
     const moyenne = totalNotes / suivis.length;
-  
-    // Ajouter la moyenne au-dessus de la page
+
     doc.setFontSize(14);
-    doc.text(`Moyenne des Notes: ${moyenne.toFixed(2)}`, 10, 10); // Affiche la moyenne avec 2 décimales
-  
-    let yPosition = 20;
-    suivis.forEach((suivi, index) => {
+    doc.text(`Moyenne des Notes: ${moyenne.toFixed(2)}`, 10, 10);
+    let y = 20;
+
+    suivis.forEach((s, index) => {
       doc.setFontSize(12);
-      doc.text(`${index + 1}. Client: ${suivi.reclamation.client.nom}`, 10, yPosition);
-      doc.text(`   Employé: ${suivi.employe.nom}`, 10, yPosition + 5);
-      doc.text(`   Note: ${suivi.reclamation.note}`, 10, yPosition + 10);
-      doc.text(`   Description: ${suivi.reclamation.description}`, 10, yPosition + 15);
-      doc.text(`   Produit: ${suivi.reclamation.produit}`, 10, yPosition + 20);
-      doc.text(`   Message: ${suivi.message}`, 10, yPosition + 25);
-      doc.text(`   Action: ${suivi.action}`, 10, yPosition + 30);
-  
-      // Ajouter un espace après chaque suivi
-      yPosition += 35;
-  
-      // Ajouter une ligne de séparation
-      doc.setFont('courier', 'normal');
-      doc.text('--------------------------------------------------------------------', 10, yPosition);
-  
-      // Mettre à jour la position pour le prochain suivi
-      yPosition += 10;
-  
-      // Si la position dépasse la limite de la page, on ajoute une nouvelle page
-      if (yPosition > 270) {
+      doc.text(`${index + 1}. Client: ${s.reclamation?.client?.nom || ''}`, 10, y);
+      doc.text(`   Employé: ${s.employe?.nom || ''}`, 10, y + 5);
+      doc.text(`   Note: ${s.reclamation?.note || ''}`, 10, y + 10);
+      doc.text(`   Description: ${s.reclamation?.description || ''}`, 10, y + 15);
+      doc.text(`   Produit: ${s.reclamation?.produit || ''}`, 10, y + 20);
+      doc.text(`   Date: ${s.date || ''}`, 10, y + 25);
+      doc.text(`   Message: ${s.message || ''}`, 10, y + 30);
+      doc.text(`   Action: ${s.action || ''}`, 10, y + 35);
+      y += 50;
+      doc.text('---------------------------------------------', 10, y);
+      y += 10;
+      if (y > 270) {
         doc.addPage();
-        yPosition = 20;
-  
-        // Ajouter la moyenne sur la nouvelle page
-        doc.setFontSize(14);
-        doc.text(`Moyenne des Notes: ${moyenne.toFixed(2)}`, 10, 10); // Affiche la moyenne sur chaque page
+        y = 20;
       }
     });
-  
-    doc.save('suivis_reclamations.pdf');
+    doc.save('suivis.pdf');
   };
-  
-  render() {
-    const { suivis, clients, employes, formData, showModal, editingId, showDeleteModal } = this.state;
 
-    const styles = {
-      container: { maxWidth: '900px', margin: 'auto', padding: '2rem', fontFamily: 'Arial, sans-serif' },
-      button: {
-        padding: '10px 15px',
-        backgroundColor: '#28a745',
-        color: '#fff',
-        border: 'none',
-        borderRadius: '5px',
-        cursor: 'pointer',
-        marginBottom: '1rem'
-      },
-      table: { width: '100%', borderCollapse: 'collapse' },
-      th: { backgroundColor: '#007bff', color: '#fff', padding: '10px' },
-      td: { padding: '10px', border: '1px solid #ddd', textAlign: 'center' },
-      iconBtn: {
-        background: 'none',
-        border: 'none',
-        cursor: 'pointer',
-        fontSize: '1.2rem',
-        margin: '0 5px',
-      },
-      modalOverlay: {
-        position: 'fixed',
-        top: 0, left: 0, right: 0, bottom: 0,
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 1000
-      },
-      modalContent: {
-        background: '#fff',
-        padding: '2rem',
-        borderRadius: '10px',
-        width: '100%',
-        maxWidth: '500px'
-      },
-      modalInput: {
-        width: '100%',
-        padding: '10px',
-        marginBottom: '1rem',
-        borderRadius: '5px',
-        border: '1px solid #ccc'
-      },
-      modalActions: { display: 'flex', justifyContent: 'space-between' }
-    };
+  render() {
+    const { suivis, employes, reclamations, formData, showModal, editingId, showDeleteModal } = this.state;
 
     return (
       <div style={styles.container}>
-        <h2>Gestion des Suivis de Réclamations</h2>
-
-        <button style={styles.button} onClick={this.openModalToAdd}>➕ Ajouter un suivi</button>
-        <button style={styles.button} onClick={this.generatePDF}>📄 Générer PDF</button>
+        <h2 style={styles.header}>Suivis des Réclamations</h2>
+        <button style={styles.button} onClick={this.openModalToAdd}>Ajouter un Suivi</button>
+        <button style={{...styles.button, ...styles.buttonSecondary}} onClick={this.generatePDF}>Générer PDF</button>
 
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Nom du Client</th>
-              <th style={styles.th}>Nom de l'Employé</th>
-              <th style={styles.th}>Note</th>
+              <th style={styles.th}>Employé</th>
               <th style={styles.th}>Description</th>
-              <th style={styles.th}>Produit</th>
+              <th style={styles.th}>Date</th>
               <th style={styles.th}>Message</th>
               <th style={styles.th}>Action</th>
               <th style={styles.th}>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {suivis.map(suivi => (
-              <tr key={suivi.id}>
-                <td style={styles.td}>{suivi.reclamation.client.nom}</td>
-                <td style={styles.td}>{suivi.employe.nom}</td>
-                <td style={styles.td}>{suivi.reclamation.note}</td>
-                <td style={styles.td}>{suivi.reclamation.description}</td>
-                <td style={styles.td}>{suivi.reclamation.produit}</td>
-                <td style={styles.td}>{suivi.message}</td>
-                <td style={styles.td}>{suivi.action}</td>
+            {suivis.map((s) => (
+              <tr key={s.id} style={{ cursor: 'pointer' }} onMouseOver={e => e.currentTarget.style.backgroundColor = '#f9f9f9'} onMouseOut={e => e.currentTarget.style.backgroundColor = ''}>
+                <td style={styles.td}>{s.employe?.nom}</td>
+                <td style={styles.td}>{s.reclamation?.description}</td>
+                <td style={styles.td}>{s.date}</td>
+                <td style={styles.td}>{s.message}</td>
+                <td style={styles.td}>{s.action}</td>
                 <td style={styles.td}>
-                  <button style={styles.iconBtn} onClick={() => this.openModalToEdit(suivi)}>✏️</button>
-                  <button style={{ ...styles.iconBtn, color: 'red' }} onClick={() => this.openDeleteModal(suivi.id)}>🗑️</button>
+                  <button style={{...styles.button, fontSize: '0.9rem', marginRight: '0.5rem'}} onClick={() => this.openModalToEdit(s)}>Modifier</button>
+                  <button style={{...styles.button, ...styles.buttonDanger, fontSize: '0.9rem'}} onClick={() => this.openDeleteModal(s.id)}>Supprimer</button>
                 </td>
               </tr>
             ))}
@@ -278,51 +316,76 @@ class SuiviReclamationTable extends React.Component {
         {showModal && (
           <div style={styles.modalOverlay}>
             <div style={styles.modalContent}>
-              <h3>{editingId ? 'Modifier Suivi' : 'Ajouter Suivi'}</h3>
+              <h3>{editingId ? 'Modifier' : 'Ajouter'} un Suivi</h3>
               <form onSubmit={this.handleSubmit}>
-                <select
-                  style={styles.modalInput}
-                  name="clientId"
-                  value={formData.clientId}
-                  onChange={this.handleChange}
-                  required
-                >
-                  <option value="">Sélectionner un client</option>
-                  {clients.map(client => (
-                    <option key={client.id} value={client.id}>{client.nom}</option>
-                  ))}
-                </select>
-
-                <select
-                  style={styles.modalInput}
-                  name="employeId"
-                  value={formData.employeId}
-                  onChange={this.handleChange}
-                  required
-                >
-                  <option value="">Sélectionner un employé</option>
-                  {employes.map(emp => (
-                    <option key={emp.id} value={emp.id}>{emp.nom}</option>
-                  ))}
-                </select>
-
-                {['message', 'action', 'note', 'description', 'produit'].map(field => (
+                <div style={styles.formGroup}>
+                  <label style={styles.label}>Message:</label>
                   <input
-                    key={field}
-                    style={styles.modalInput}
-                    name={field}
-                    value={formData[field]}
+                    style={styles.input}
+                    type="text"
+                    name="message"
+                    value={formData.message}
                     onChange={this.handleChange}
-                    placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
                     required
                   />
-                ))}
-
-                <div style={styles.modalActions}>
-                  <button type="submit" style={{ ...styles.button, backgroundColor: '#007bff' }}>
-                    {editingId ? 'Enregistrer' : 'Ajouter'}
+                </div>
+                <div style={styles.formGroup}>
+                  <label style={styles.label}>Action:</label>
+                  <input
+                    style={styles.input}
+                    type="text"
+                    name="action"
+                    value={formData.action}
+                    onChange={this.handleChange}
+                    required
+                  />
+                </div>
+                <div style={styles.formGroup}>
+                  <label style={styles.label}>Employé:</label>
+                  <select
+                    style={styles.select}
+                    name="employeId"
+                    value={formData.employeId}
+                    onChange={this.handleChange}
+                    required
+                  >
+                    <option value="">-- Sélectionner --</option>
+                    {employes.map(e => (
+                      <option key={e.id} value={e.id}>{e.nom}</option>
+                    ))}
+                  </select>
+                </div>
+                <div style={styles.formGroup}>
+                  <label style={styles.label}>Réclamation:</label>
+                  <select
+                    style={styles.select}
+                    name="reclamationId"
+                    value={formData.reclamationId}
+                    onChange={this.handleChange}
+                    required
+                  >
+                    <option value="">-- Sélectionner --</option>
+                    {reclamations.map(r => (
+                      <option key={r.id} value={r.id}>{r.description}</option>
+                    ))}
+                  </select>
+                </div>
+                <div style={styles.formGroup}>
+                  <label style={styles.label}>Date:</label>
+                  <input
+                    style={styles.input}
+                    type="date"
+                    name="date"
+                    value={formData.date}
+                    onChange={this.handleChange}
+                    required
+                  />
+                </div>
+                <div style={styles.modalButtons}>
+                  <button type="submit" style={{...styles.button, fontSize: '1rem'}}>
+                    {editingId ? 'Modifier' : 'Ajouter'}
                   </button>
-                  <button type="button" style={{ ...styles.button, backgroundColor: '#6c757d' }} onClick={() => this.setState({ showModal: false })}>
+                  <button type="button" style={{...styles.button, ...styles.buttonDanger, fontSize: '1rem'}} onClick={() => this.setState({ showModal: false, editingId: null })}>
                     Annuler
                   </button>
                 </div>
@@ -334,14 +397,11 @@ class SuiviReclamationTable extends React.Component {
         {showDeleteModal && (
           <div style={styles.modalOverlay}>
             <div style={styles.modalContent}>
-              <h3>Êtes-vous sûr de vouloir supprimer ce suivi ?</h3>
-              <div style={styles.modalActions}>
-                <button style={{ ...styles.button, backgroundColor: '#dc3545' }} onClick={this.handleDelete}>
-                  Supprimer
-                </button>
-                <button style={{ ...styles.button, backgroundColor: '#6c757d' }} onClick={this.cancelDelete}>
-                  Annuler
-                </button>
+              <h3>Confirmer la suppression</h3>
+              <p>Êtes-vous sûr de vouloir supprimer ce suivi ?</p>
+              <div style={styles.modalButtons}>
+                <button style={{...styles.button, fontSize: '1rem'}} onClick={this.handleDelete}>Oui</button>
+                <button style={{...styles.button, ...styles.buttonDanger, fontSize: '1rem'}} onClick={this.cancelDelete}>Non</button>
               </div>
             </div>
           </div>
