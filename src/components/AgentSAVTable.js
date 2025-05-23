@@ -191,12 +191,12 @@ const AgentSAVTable = () => {
                 required
               />
 
-              <input
+             <input
                 style={styles.modalInput}
                 name="motDePasse"
-                value={formData. motDePasse}
+                value={formData.motDePasse}
                 onChange={handleChange}
-                placeholder=" motDePasse"
+                placeholder="motDePasse"
                 required
               />
               <div style={styles.modalActions}>

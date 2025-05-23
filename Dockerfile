@@ -10,7 +10,7 @@ COPY . .
 
 RUN npm run build
 
-# Étape 2 : Utiliser "serve" pour servir l'app
+# Étape 2 : Utiliser "serve" pour servir l'app React buildée
 RUN npm install -g serve
 EXPOSE 3000
 CMD ["serve", "-s", "build", "-l", "3000"]

@@ -1,25 +1,171 @@
 .client-interface {
-    padding: 20px;
-    max-width: 600px;
-    margin: auto;
+  padding: 2rem;
+  max-width: 800px;
+  margin: 2rem auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+header h2 {
+  color: #2c3e50;
+  font-size: 2rem;
+  margin: 0;
+}
+
+.reclamation-form, .historique-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+h3 {
+  color: #3498db;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+textarea {
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: border 0.3s;
+  resize: vertical;
+  min-height: 120px;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+button:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+}
+
+.toggle-historique {
+  background-color: #2c3e50;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.toggle-historique:hover {
+  background-color: #1a252f;
+}
+
+.historique {
+  background: white;
+  padding: 1rem;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  padding: 1rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+li:last-child {
+  border-bottom: none;
+}
+
+.reclamation-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.reclamation-id {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.reclamation-date {
+  color: #7f8c8d;
+}
+
+.reclamation-content {
+  margin: 0.5rem 0;
+  line-height: 1.5;
+}
+
+.reclamation-status {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.reclamation-status.resolu {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.reclamation-status.en-cours {
+  background-color: #f39c12;
+  color: white;
+}
+
+.reclamation-status.nouveau {
+  background-color: #3498db;
+  color: white;
+}
+
+.no-data {
+  text-align: center;
+  color: #7f8c8d;
+  font-style: italic;
+  padding: 1rem;
+}
+
+@media (max-width: 600px) {
+  .client-interface {
+    padding: 1rem;
   }
   
-  textarea {
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 10px;
+  .reclamation-form, .historique-section {
+    padding: 1rem;
   }
-  
-  button {
-    padding: 8px 16px;
-    margin-top: 10px;
-    cursor: pointer;
-  }
-  
-  .historique {
-    margin-top: 20px;
-    background: #f4f4f4;
-    padding: 15px;
-    border-radius: 8px;
-  }
-  
+}

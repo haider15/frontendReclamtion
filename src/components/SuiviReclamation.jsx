@@ -7,93 +7,182 @@ const API_URL = process.env.REACT_APP_API_URL;
 const styles = {
   container: {
     padding: '2rem',
-    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    maxWidth: 1000,
-    margin: 'auto',
+    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+    maxWidth: '1200px',
+    margin: '0 auto',
+    backgroundColor: '#f8f9fa',
+    borderRadius: '8px',
+    boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
   },
   header: {
-    marginBottom: '1rem',
-    color: '#333',
+    marginBottom: '1.5rem',
+    color: '#2c3e50',
+    fontSize: '1.8rem',
+    fontWeight: '600',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  buttonGroup: {
+    display: 'flex',
+    gap: '1rem',
+    marginBottom: '1.5rem',
   },
   button: {
-    marginRight: '1rem',
-    padding: '0.5rem 1rem',
-    fontSize: '1rem',
+    padding: '0.6rem 1.2rem',
+    fontSize: '0.9rem',
     cursor: 'pointer',
-    borderRadius: 4,
+    borderRadius: '6px',
     border: 'none',
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#3498db',
     color: 'white',
-    transition: 'background-color 0.3s',
+    fontWeight: '500',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px',
+    transition: 'all 0.3s ease',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+  },
+  buttonPrimary: {
+    backgroundColor: '#3498db',
+    '&:hover': {
+      backgroundColor: '#2980b9',
+    },
+  },
+  buttonSuccess: {
+    backgroundColor: '#2ecc71',
+    '&:hover': {
+      backgroundColor: '#27ae60',
+    },
   },
   buttonDanger: {
-    backgroundColor: '#f44336',
+    backgroundColor: '#e74c3c',
+    '&:hover': {
+      backgroundColor: '#c0392b',
+    },
   },
-  buttonSecondary: {
-    backgroundColor: '#2196F3',
+  tableContainer: {
+    backgroundColor: 'white',
+    borderRadius: '8px',
+    boxShadow: '0 2px 15px rgba(0,0,0,0.05)',
+    overflow: 'hidden',
   },
   table: {
     width: '100%',
     borderCollapse: 'collapse',
-    marginTop: '1rem',
   },
   th: {
-    backgroundColor: '#f2f2f2',
-    padding: '12px',
-    borderBottom: '1px solid #ddd',
+    backgroundColor: '#34495e',
+    color: 'white',
+    padding: '15px',
     textAlign: 'left',
+    fontWeight: '500',
+    textTransform: 'uppercase',
+    fontSize: '0.8rem',
+    letterSpacing: '0.5px',
   },
   td: {
-    padding: '10px',
-    borderBottom: '1px solid #ddd',
+    padding: '12px 15px',
+    borderBottom: '1px solid #ecf0f1',
+    fontSize: '0.9rem',
+    color: '#34495e',
   },
   trHover: {
-    backgroundColor: '#f9f9f9',
+    transition: 'background-color 0.2s',
+    '&:hover': {
+      backgroundColor: '#f8f9fa',
+    },
+  },
+  actionCell: {
+    display: 'flex',
+    gap: '0.5rem',
   },
   modalOverlay: {
     position: 'fixed',
-    top: 0, left: 0, right: 0, bottom: 0,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     backgroundColor: 'rgba(0,0,0,0.5)',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 1000,
+    backdropFilter: 'blur(3px)',
   },
   modalContent: {
     backgroundColor: 'white',
     padding: '2rem',
-    borderRadius: 8,
-    width: '400px',
-    maxHeight: '80vh',
+    borderRadius: '10px',
+    width: '500px',
+    maxWidth: '90%',
+    maxHeight: '90vh',
     overflowY: 'auto',
-    boxShadow: '0 5px 15px rgba(0,0,0,0.3)',
+    boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
+  },
+  modalHeader: {
+    marginBottom: '1.5rem',
+    color: '#2c3e50',
+    fontSize: '1.4rem',
+    fontWeight: '600',
   },
   formGroup: {
-    marginBottom: '1rem',
+    marginBottom: '1.2rem',
   },
   label: {
     display: 'block',
     marginBottom: '0.5rem',
-    fontWeight: '600',
+    fontWeight: '500',
+    color: '#7f8c8d',
+    fontSize: '0.9rem',
   },
   input: {
     width: '100%',
-    padding: '0.5rem',
-    borderRadius: 4,
-    border: '1px solid #ccc',
-    fontSize: '1rem',
+    padding: '0.8rem',
+    borderRadius: '6px',
+    border: '1px solid #dfe6e9',
+    fontSize: '0.95rem',
+    transition: 'border-color 0.3s',
+    '&:focus': {
+      outline: 'none',
+      borderColor: '#3498db',
+      boxShadow: '0 0 0 2px rgba(52,152,219,0.2)',
+    },
   },
   select: {
     width: '100%',
-    padding: '0.5rem',
-    borderRadius: 4,
-    border: '1px solid #ccc',
-    fontSize: '1rem',
+    padding: '0.8rem',
+    borderRadius: '6px',
+    border: '1px solid #dfe6e9',
+    fontSize: '0.95rem',
+    backgroundColor: 'white',
+    appearance: 'none',
+    backgroundImage: 'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23999%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E")',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'right 0.7rem top 50%',
+    backgroundSize: '0.65rem auto',
   },
   modalButtons: {
     display: 'flex',
     justifyContent: 'flex-end',
     gap: '1rem',
+    marginTop: '1.5rem',
+  },
+  deleteModalContent: {
+    textAlign: 'center',
+    padding: '2rem',
+  },
+  deleteModalText: {
+    marginBottom: '2rem',
+    fontSize: '1.1rem',
+    color: '#7f8c8d',
+  },
+  emptyState: {
+    padding: '3rem',
+    textAlign: 'center',
+    color: '#95a5a6',
   },
 };
 
@@ -142,14 +231,21 @@ class SuiviReclamationTable extends React.Component {
     }
   };
 
-  fetchReclamations = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/api/reclamations`);
-      this.setState({ reclamations: response.data });
-    } catch (err) {
-      console.error('Erreur chargement réclamations :', err);
+ fetchReclamations = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/api/reclamations`);
+    const data = response.data;
+    if (Array.isArray(data)) {
+      this.setState({ reclamations: data });
+    } else {
+      console.warn('Reclamations API response is not an array:', data);
+      this.setState({ reclamations: [] });
     }
-  };
+  } catch (err) {
+    console.error('Erreur chargement réclamations :', err);
+  }
+};
+
 
   openModalToAdd = () => {
     this.setState({
@@ -194,7 +290,7 @@ class SuiviReclamationTable extends React.Component {
     const { editingId, formData } = this.state;
 
     if (!formData.message || !formData.action || !formData.employeId || !formData.reclamationId || !formData.date) {
-      alert('Veuillez remplir tous les champs.');
+      alert('Veuillez remplir tous les champs obligatoires.');
       return;
     }
 
@@ -248,32 +344,54 @@ class SuiviReclamationTable extends React.Component {
     }
 
     const doc = new jsPDF();
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.setTextColor(44, 62, 80);
+    doc.text('Rapport des Suivis de Réclamations', 105, 15, null, null, 'center');
+    
+    doc.setFontSize(10);
+    doc.setTextColor(149, 165, 166);
+    doc.text(`Généré le ${new Date().toLocaleDateString()}`, 105, 22, null, null, 'center');
+    
+    doc.setDrawColor(52, 152, 219);
+    doc.setLineWidth(0.5);
+    doc.line(20, 25, 190, 25);
+    
     const totalNotes = suivis.reduce((sum, s) => sum + (s.reclamation?.note || 0), 0);
     const moyenne = totalNotes / suivis.length;
 
-    doc.setFontSize(14);
-    doc.text(`Moyenne des Notes: ${moyenne.toFixed(2)}`, 10, 10);
-    let y = 20;
+    doc.setFontSize(12);
+    doc.setTextColor(52, 152, 219);
+    doc.text(`Moyenne des Notes: ${moyenne.toFixed(2)}`, 20, 35);
+    
+    doc.setFontSize(10);
+    doc.setTextColor(44, 62, 80);
+    let y = 45;
 
     suivis.forEach((s, index) => {
-      doc.setFontSize(12);
-      doc.text(`${index + 1}. Client: ${s.reclamation?.client?.nom || ''}`, 10, y);
-      doc.text(`   Employé: ${s.employe?.nom || ''}`, 10, y + 5);
-      doc.text(`   Note: ${s.reclamation?.note || ''}`, 10, y + 10);
-      doc.text(`   Description: ${s.reclamation?.description || ''}`, 10, y + 15);
-      doc.text(`   Produit: ${s.reclamation?.produit || ''}`, 10, y + 20);
-      doc.text(`   Date: ${s.date || ''}`, 10, y + 25);
-      doc.text(`   Message: ${s.message || ''}`, 10, y + 30);
-      doc.text(`   Action: ${s.action || ''}`, 10, y + 35);
-      y += 50;
-      doc.text('---------------------------------------------', 10, y);
-      y += 10;
+      doc.setFont('helvetica', 'bold');
+      doc.text(`${index + 1}. Client: ${s.reclamation?.client?.nom || 'Non spécifié'}`, 20, y);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`   Employé: ${s.employe?.nom || 'Non spécifié'}`, 20, y + 5);
+      doc.text(`   Note: ${s.reclamation?.note || 'N/A'}`, 20, y + 10);
+      doc.text(`   Description: ${s.reclamation?.description || 'Aucune'}`, 20, y + 15);
+      doc.text(`   Produit: ${s.reclamation?.produit || 'Non spécifié'}`, 20, y + 20);
+      doc.text(`   Date: ${s.date || 'Non spécifiée'}`, 20, y + 25);
+      doc.text(`   Message: ${s.message || 'Aucun'}`, 20, y + 30);
+      doc.text(`   Action: ${s.action || 'Aucune'}`, 20, y + 35);
+      y += 45;
+      
+      doc.setDrawColor(236, 240, 241);
+      doc.line(20, y, 190, y);
+      y += 5;
+      
       if (y > 270) {
         doc.addPage();
         y = 20;
       }
     });
-    doc.save('suivis.pdf');
+    
+    doc.save(`suivis_reclamations_${new Date().toISOString().slice(0, 10)}.pdf`);
   };
 
   render() {
@@ -281,45 +399,77 @@ class SuiviReclamationTable extends React.Component {
 
     return (
       <div style={styles.container}>
-        <h2 style={styles.header}>Suivis des Réclamations</h2>
-        <button style={styles.button} onClick={this.openModalToAdd}>Ajouter un Suivi</button>
-        <button style={{...styles.button, ...styles.buttonSecondary}} onClick={this.generatePDF}>Générer PDF</button>
+        <div style={styles.header}>
+          <h2>Suivis des Réclamations</h2>
+          <div style={styles.buttonGroup}>
+            <button 
+              style={{...styles.button, ...styles.buttonSuccess}} 
+              onClick={this.openModalToAdd}
+            >
+              <i className="fas fa-plus"></i> Ajouter
+            </button>
+            <button 
+              style={{...styles.button, ...styles.buttonPrimary}} 
+              onClick={this.generatePDF}
+            >
+              <i className="fas fa-file-pdf"></i> Générer PDF
+            </button>
+          </div>
+        </div>
 
-        <table style={styles.table}>
-          <thead>
-            <tr>
-              <th style={styles.th}>Employé</th>
-              <th style={styles.th}>Description</th>
-              <th style={styles.th}>Date</th>
-              <th style={styles.th}>Message</th>
-              <th style={styles.th}>Action</th>
-              <th style={styles.th}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {suivis.map((s) => (
-              <tr key={s.id} style={{ cursor: 'pointer' }} onMouseOver={e => e.currentTarget.style.backgroundColor = '#f9f9f9'} onMouseOut={e => e.currentTarget.style.backgroundColor = ''}>
-                <td style={styles.td}>{s.employe?.nom}</td>
-                <td style={styles.td}>{s.reclamation?.description}</td>
-                <td style={styles.td}>{s.date}</td>
-                <td style={styles.td}>{s.message}</td>
-                <td style={styles.td}>{s.action}</td>
-                <td style={styles.td}>
-                  <button style={{...styles.button, fontSize: '0.9rem', marginRight: '0.5rem'}} onClick={() => this.openModalToEdit(s)}>Modifier</button>
-                  <button style={{...styles.button, ...styles.buttonDanger, fontSize: '0.9rem'}} onClick={() => this.openDeleteModal(s.id)}>Supprimer</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div style={styles.tableContainer}>
+          {suivis.length > 0 ? (
+            <table style={styles.table}>
+              <thead>
+                <tr>
+                  <th style={styles.th}>Employé</th>
+                  <th style={styles.th}>Réclamation</th>
+                  <th style={styles.th}>Date</th>
+                  <th style={styles.th}>Message</th>
+                  <th style={styles.th}>Action</th>
+                  <th style={styles.th}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {suivis.map((s) => (
+                  <tr key={s.id} style={styles.trHover}>
+                    <td style={styles.td}>{s.employe?.nom || 'N/A'}</td>
+                    <td style={styles.td}>{s.reclamation?.description || 'N/A'}</td>
+                    <td style={styles.td}>{s.date || 'N/A'}</td>
+                    <td style={styles.td}>{s.message || 'N/A'}</td>
+                    <td style={styles.td}>{s.action || 'N/A'}</td>
+                    <td style={{...styles.td, ...styles.actionCell}}>
+                      <button 
+                        style={{...styles.button, padding: '0.4rem 0.8rem', fontSize: '0.8rem'}} 
+                        onClick={() => this.openModalToEdit(s)}
+                      >
+                        <i className="fas fa-edit"></i>
+                      </button>
+                      <button 
+                        style={{...styles.button, ...styles.buttonDanger, padding: '0.4rem 0.8rem', fontSize: '0.8rem'}} 
+                        onClick={() => this.openDeleteModal(s.id)}
+                      >
+                        <i className="fas fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div style={styles.emptyState}>
+              <p>Aucun suivi de réclamation disponible</p>
+            </div>
+          )}
+        </div>
 
         {showModal && (
           <div style={styles.modalOverlay}>
             <div style={styles.modalContent}>
-              <h3>{editingId ? 'Modifier' : 'Ajouter'} un Suivi</h3>
+              <h3 style={styles.modalHeader}>{editingId ? 'Modifier' : 'Ajouter'} un Suivi</h3>
               <form onSubmit={this.handleSubmit}>
                 <div style={styles.formGroup}>
-                  <label style={styles.label}>Message:</label>
+                  <label style={styles.label}>Message *</label>
                   <input
                     style={styles.input}
                     type="text"
@@ -330,7 +480,7 @@ class SuiviReclamationTable extends React.Component {
                   />
                 </div>
                 <div style={styles.formGroup}>
-                  <label style={styles.label}>Action:</label>
+                  <label style={styles.label}>Action *</label>
                   <input
                     style={styles.input}
                     type="text"
@@ -341,7 +491,7 @@ class SuiviReclamationTable extends React.Component {
                   />
                 </div>
                 <div style={styles.formGroup}>
-                  <label style={styles.label}>Employé:</label>
+                  <label style={styles.label}>Employé *</label>
                   <select
                     style={styles.select}
                     name="employeId"
@@ -349,14 +499,14 @@ class SuiviReclamationTable extends React.Component {
                     onChange={this.handleChange}
                     required
                   >
-                    <option value="">-- Sélectionner --</option>
+                    <option value="">-- Sélectionner un employé --</option>
                     {employes.map(e => (
                       <option key={e.id} value={e.id}>{e.nom}</option>
                     ))}
                   </select>
                 </div>
                 <div style={styles.formGroup}>
-                  <label style={styles.label}>Réclamation:</label>
+                  <label style={styles.label}>Réclamation *</label>
                   <select
                     style={styles.select}
                     name="reclamationId"
@@ -364,14 +514,14 @@ class SuiviReclamationTable extends React.Component {
                     onChange={this.handleChange}
                     required
                   >
-                    <option value="">-- Sélectionner --</option>
+                    <option value="">-- Sélectionner une réclamation --</option>
                     {reclamations.map(r => (
                       <option key={r.id} value={r.id}>{r.description}</option>
                     ))}
                   </select>
                 </div>
                 <div style={styles.formGroup}>
-                  <label style={styles.label}>Date:</label>
+                  <label style={styles.label}>Date *</label>
                   <input
                     style={styles.input}
                     type="date"
@@ -382,11 +532,18 @@ class SuiviReclamationTable extends React.Component {
                   />
                 </div>
                 <div style={styles.modalButtons}>
-                  <button type="submit" style={{...styles.button, fontSize: '1rem'}}>
-                    {editingId ? 'Modifier' : 'Ajouter'}
-                  </button>
-                  <button type="button" style={{...styles.button, ...styles.buttonDanger, fontSize: '1rem'}} onClick={() => this.setState({ showModal: false, editingId: null })}>
+                  <button 
+                    type="button" 
+                    style={{...styles.button, ...styles.buttonDanger}} 
+                    onClick={() => this.setState({ showModal: false, editingId: null })}
+                  >
                     Annuler
+                  </button>
+                  <button 
+                    type="submit" 
+                    style={{...styles.button, ...styles.buttonSuccess}}
+                  >
+                    {editingId ? 'Mettre à jour' : 'Enregistrer'}
                   </button>
                 </div>
               </form>
@@ -396,12 +553,22 @@ class SuiviReclamationTable extends React.Component {
 
         {showDeleteModal && (
           <div style={styles.modalOverlay}>
-            <div style={styles.modalContent}>
-              <h3>Confirmer la suppression</h3>
-              <p>Êtes-vous sûr de vouloir supprimer ce suivi ?</p>
+            <div style={{...styles.modalContent, ...styles.deleteModalContent}}>
+              <h3 style={styles.modalHeader}>Confirmer la suppression</h3>
+              <p style={styles.deleteModalText}>Êtes-vous sûr de vouloir supprimer ce suivi ? Cette action est irréversible.</p>
               <div style={styles.modalButtons}>
-                <button style={{...styles.button, fontSize: '1rem'}} onClick={this.handleDelete}>Oui</button>
-                <button style={{...styles.button, ...styles.buttonDanger, fontSize: '1rem'}} onClick={this.cancelDelete}>Non</button>
+                <button 
+                  style={{...styles.button, ...styles.buttonDanger}} 
+                  onClick={this.cancelDelete}
+                >
+                  Annuler
+                </button>
+                <button 
+                  style={{...styles.button, ...styles.buttonSuccess}} 
+                  onClick={this.handleDelete}
+                >
+                  Confirmer
+                </button>
               </div>
             </div>
           </div>
