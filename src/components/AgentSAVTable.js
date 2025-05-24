@@ -153,7 +153,8 @@ const AgentSAVTable = () => {
             <tr key={agent.id}>
               <td style={styles.td}>{agent.nom}</td>
               <td style={styles.td}>{agent.competence}</td>
-              <td style={styles.td}>{agent.motDePasse}</td>
+              <td style={styles.td}>{'•'.repeat(agent.motDePasse.length)}</td>
+
               <td style={styles.td}>
                 <button style={styles.iconBtn} onClick={() => openModalToEdit(agent)}>✏️</button>
                 <button

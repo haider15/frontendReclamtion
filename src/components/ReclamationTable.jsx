@@ -160,9 +160,23 @@ const ReclamationTable = () => {
                 <td>{dateISO}</td>
                 <td>{r.statut}</td>
                 <td>{client ? client.nom : 'N/A'}</td>
-                <td>{r.note}</td>
+                <td>
+  {[...Array(5)].map((_, i) => (
+    <span key={i} style={{ color: i < r.note ? '#ffc107' : '#e4e5e9' }}>
+      ★
+    </span>
+  ))}
+</td>
+
                 <td>{r.produit}</td>
-                <td>{r.satisfaction ?? 'N/A'}</td>
+                 <td>
+  {[...Array(5)].map((_, i) => (
+    <span key={i} style={{ color: i < r.satisfaction ? '#ffc107' : '#e4e5e9' }}>
+      ★
+    </span>
+  ))}
+</td>
+                
                 <td>
                   <button onClick={() => openModalToEdit(r)}>✏️</button>
                   <button onClick={() => { setReclamationToDelete(r); setShowDeleteModal(true); }}>🗑️</button>
@@ -193,14 +207,16 @@ const ReclamationTable = () => {
               required
               style={{ width: '100%', marginBottom: 10 }}
             />
-            <input
-              type="date"
-              name="date"
-              value={formData.date}
-              onChange={handleChange}
-              required
-              style={{ width: '100%', marginBottom: 10 }}
-            />
+           <input
+  type="date"
+  name="date"
+  value={formData.date}
+  onChange={handleChange}
+  required
+  min={new Date().toISOString().split("T")[0]} // limite la sélection à aujourd’hui ou plus tard
+  style={{ width: '100%', marginBottom: 10 }}
+/>
+
             <input
               type="text"
               name="statut"
@@ -222,16 +238,23 @@ const ReclamationTable = () => {
                 <option key={client.id} value={client.id}>{client.nom}</option>
               ))}
             </select>
-            <input
-              type="number"
-              name="note"
-              placeholder="Note"
-              min={0}
-              max={10}
-              value={formData.note}
-              onChange={handleChange}
-              style={{ width: '100%', marginBottom: 10 }}
-            />
+          <div style={{ marginBottom: 10 }}>
+  {[1, 2, 3, 4, 5].map((value) => (
+    <span
+      key={value}
+      onClick={() => handleChange({ target: { name: 'note', value } })}
+      style={{
+        cursor: 'pointer',
+        color: value <= formData.note ? '#ffc107' : '#e4e5e9',
+        fontSize: '24px',
+        marginRight: 5,
+      }}
+    >
+      ★
+    </span>
+  ))}
+</div>
+
             <input
               type="text"
               name="produit"
@@ -240,16 +263,26 @@ const ReclamationTable = () => {
               onChange={handleChange}
               style={{ width: '100%', marginBottom: 10 }}
             />
-            <input
-              type="number"
-              name="satisfaction"
-              placeholder="Satisfaction"
-              min={0}
-              max={10}
-              value={formData.satisfaction ?? ''}
-              onChange={handleChange}
-              style={{ width: '100%', marginBottom: 10 }}
-            />
+           <div style={{ marginBottom: 10 }}>
+  {[1, 2, 3, 4, 5].map((value) => (
+    <span
+      key={value}
+      onClick={() => handleChange({ target: { name: 'satisfaction', value } })}
+      style={{
+        cursor: 'pointer',
+        color: value <= (formData.satisfaction ?? 0) ? '#ffc107' : '#e4e5e9',
+        fontSize: '24px',
+        marginRight: 5,
+      }}
+    >
+      ★
+    </span>
+  ))}
+</div>
+<div style={{ fontSize: '14px', marginTop: 4 }}>
+  Satisfaction : {formData.satisfaction ?? 0}/5
+</div>
+
             <button type="submit">{editingId ? 'Modifier' : 'Ajouter'}</button>
             <button type="button" onClick={() => setShowModal(false)} style={{ marginLeft: 10 }}>Annuler</button>
           </form>

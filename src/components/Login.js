@@ -26,7 +26,7 @@ function Login() {
 
     if (credentials.role === 'admin') {
       if (credentials.nom === 'admin' && credentials.motDePasse === '123456') {
-        navigate('/admin');
+        navigate('/reclamations');
       } else {
         setErreur('Nom ou mot de passe admin incorrect');
       }
@@ -45,7 +45,7 @@ function Login() {
       });
 
       if (res.status === 200 && res.data.id) {
-        navigate(credentials.role === 'agent' ? '/agents' : '/clients');
+        navigate(credentials.role === 'agent' ? '/reclamations' : '/reclamations');
       } else {
         setErreur('Nom ou mot de passe incorrect');
       }

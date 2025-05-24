@@ -424,6 +424,7 @@ class SuiviReclamationTable extends React.Component {
                 <tr>
                   <th style={styles.th}>Employé</th>
                   <th style={styles.th}>Réclamation</th>
+                    
                   <th style={styles.th}>Date</th>
                   <th style={styles.th}>Message</th>
                   <th style={styles.th}>Action</th>
@@ -435,6 +436,8 @@ class SuiviReclamationTable extends React.Component {
                   <tr key={s.id} style={styles.trHover}>
                     <td style={styles.td}>{s.employe?.nom || 'N/A'}</td>
                     <td style={styles.td}>{s.reclamation?.description || 'N/A'}</td>
+                    
+
                     <td style={styles.td}>{s.date || 'N/A'}</td>
                     <td style={styles.td}>{s.message || 'N/A'}</td>
                     <td style={styles.td}>{s.action || 'N/A'}</td>

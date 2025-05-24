@@ -130,9 +130,9 @@ const Affectation = () => {
                         <span className="client-name">
                           {reclamation.client ? reclamation.client.nom : "Non spécifié"}
                         </span>
-                        {reclamation.client?.email && (
+                        {/* {reclamation.client?.email && (
                           <span className="client-email">{reclamation.client.email}</span>
-                        )}
+                        )} */}
                       </div>
                     </td>
                     <td className="description-cell">
